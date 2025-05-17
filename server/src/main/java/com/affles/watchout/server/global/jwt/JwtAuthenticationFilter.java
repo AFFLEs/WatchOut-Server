@@ -1,5 +1,6 @@
 package com.affles.watchout.server.global.jwt;
 
+import com.affles.watchout.server.global.util.RedisUtil;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,6 +19,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+    private final RedisUtil redisUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -25,14 +27,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = resolveToken(request);
+        String token = jwtUtil.resolveToken(request);
 
         if (StringUtils.hasText(token) && jwtUtil.validateToken(token)) {
+
+            if (redisUtil.isTokenBlacklisted(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
+
             Claims claims = jwtUtil.getClaims(token);
 
             // 유저 정보를 꺼냄
             Long userId = Long.parseLong(claims.getSubject());
-            String email = claims.get("email", String.class);
 
             // 권한 없이 userId, email만 담은 토큰 생성
             UsernamePasswordAuthenticationToken authentication =
@@ -44,13 +51,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
     }
 }

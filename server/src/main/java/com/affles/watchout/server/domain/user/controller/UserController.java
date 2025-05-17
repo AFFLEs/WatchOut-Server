@@ -5,6 +5,7 @@ import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.SignUpRequ
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.SignInResponse;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.SignUpResponse;
 import com.affles.watchout.server.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,4 +31,12 @@ public class UserController {
         SignInResponse result = userService.signIn(request, response);
         return ResponseEntity.ok(result);
     }
+
+    // 로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        userService.logout(request);
+        return ResponseEntity.ok().build();
+    }
+
 }
