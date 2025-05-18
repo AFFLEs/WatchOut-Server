@@ -26,10 +26,11 @@ public class TravelServiceImpl implements TravelService {
     private final JwtUtil jwtUtil;
 
     @Override
-    public void createTravel(CreateTravelRequest request, HttpServletRequest httpServletRequest) {
+    public TravelInfoResponse createTravel(CreateTravelRequest request, HttpServletRequest httpServletRequest) {
         if (request.getDepartDate() == null || request.getArriveDate() == null) {
             throw new TravelException(ErrorStatus.TRAVEL_DATE_REQUIRED);
         }
+
         Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(httpServletRequest));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
@@ -41,6 +42,8 @@ public class TravelServiceImpl implements TravelService {
                 .build();
 
         travelRepository.save(travel);
+
+        return TravelConverter.toTravelInfoResponse(travel);
     }
 
     @Override

@@ -16,9 +16,9 @@ public class TravelController {
     private final TravelService travelService;
 
     @PostMapping
-    public ApiResponse<Void> createTravel(@RequestBody CreateTravelRequest request, HttpServletRequest httpRequest) {
-        travelService.createTravel(request, httpRequest);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<TravelInfoResponse> createTravel(@RequestBody CreateTravelRequest request, HttpServletRequest httpRequest) {
+        TravelInfoResponse response = travelService.createTravel(request, httpRequest);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping

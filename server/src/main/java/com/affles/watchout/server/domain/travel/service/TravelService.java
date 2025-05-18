@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface TravelService {
 
-    void createTravel(CreateTravelRequest request, HttpServletRequest httpServletRequest);
+    TravelInfoResponse createTravel(CreateTravelRequest request, HttpServletRequest httpServletRequest);
 
     TravelInfoResponse getTravel(HttpServletRequest httpServletRequest);
 }
