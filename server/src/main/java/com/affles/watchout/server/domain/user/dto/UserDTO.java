@@ -32,7 +32,7 @@ public class UserDTO {
         }
 
         @Getter
-        public static class SignInRequest {
+        public static class LoginRequest {
             @NotBlank
             private String email;
 
@@ -57,7 +57,7 @@ public class UserDTO {
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
-        public static class SignInResponse {
+        public static class LoginResponse {
             private String accessToken;
             private String refreshToken;
         }
