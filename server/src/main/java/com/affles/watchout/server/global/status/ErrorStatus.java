@@ -22,7 +22,12 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "토큰이 유효하지 않거나 존재하지 않습니다."),
-    WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다.");
+    LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "로그인 후 이용 가능합니다."),
+    WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
+
+    // 여행 관련 에러
+    TRAVEL_NOT_FOUND(HttpStatus.NOT_FOUND, "등록한 여행 일정이 없습니다."),
+    TRAVEL_DATE_REQUIRED(HttpStatus.BAD_REQUEST, "출발일과 도착일은 필수입니다.");
 
 
     private final HttpStatus httpStatus;
