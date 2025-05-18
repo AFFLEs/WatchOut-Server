@@ -1,5 +1,6 @@
 package com.affles.watchout.server.global.config;
 
+import com.affles.watchout.server.global.jwt.JwtAuthenticationEntryPoint;
 import com.affles.watchout.server.global.jwt.JwtAuthenticationFilter;
 import com.affles.watchout.server.global.jwt.JwtUtil;
 import com.affles.watchout.server.global.util.RedisUtil;
@@ -22,6 +23,7 @@ public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -44,8 +46,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/users/signup", "/api/users/login").permitAll()
                         .anyRequest().authenticated()
                 )
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                )
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil, redisUtil), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
-
 }
