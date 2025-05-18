@@ -1,5 +1,6 @@
 package com.affles.watchout.server.domain.emergency.entity;
 import com.affles.watchout.server.domain.user.entity.User;
+import com.affles.watchout.server.global.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Emergency {
+public class Emergency extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

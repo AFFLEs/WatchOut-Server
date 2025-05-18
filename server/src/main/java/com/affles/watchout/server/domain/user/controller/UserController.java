@@ -1,10 +1,11 @@
 package com.affles.watchout.server.domain.user.controller;
 
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.SignInRequest;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.LoginRequest;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.SignUpRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.SignInResponse;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.LoginResponse;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.SignUpResponse;
 import com.affles.watchout.server.domain.user.service.UserService;
+import com.affles.watchout.server.global.common.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +21,21 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<SignUpResponse> signup(@RequestBody SignUpRequest request) {
-        SignUpResponse response = userService.signUp(request);
-        return ResponseEntity.ok(response);
+    public ApiResponse<SignUpResponse> signUp(@RequestBody SignUpRequest request) {
+        return ApiResponse.onSuccess(userService.signUp(request));
     }
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<SignInResponse> login(@RequestBody SignInRequest request, HttpServletResponse response) {
-        SignInResponse result = userService.signIn(request, response);
-        return ResponseEntity.ok(result);
+    public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+        return ApiResponse.onSuccess(userService.login(request, response));
     }
 
     // 로그아웃
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
+    public ApiResponse<Void> logout(HttpServletRequest request) {
         userService.logout(request);
-        return ResponseEntity.ok().build();
+        return ApiResponse.onSuccess(null);
     }
 
 }

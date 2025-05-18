@@ -5,7 +5,9 @@ import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
 import com.affles.watchout.server.domain.user.entity.User;
 import com.affles.watchout.server.domain.user.repository.UserRepository;
+import com.affles.watchout.server.global.exception.UserException;
 import com.affles.watchout.server.global.jwt.JwtUtil;
+import com.affles.watchout.server.global.status.ErrorStatus;
 import com.affles.watchout.server.global.util.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,12 +30,12 @@ public class UserServiceImpl implements UserService {
     public SignUpResponse signUp(SignUpRequest request) {
         // 이메일 중복 체크
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+            throw new UserException(ErrorStatus.USER_ALREADY_EXISTS);
         }
 
         // 비밀번호 확인
         if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new UserException(ErrorStatus.PASSWORD_NOT_MATCH);
         }
 
         // 비밀번호 암호화
@@ -47,14 +49,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SignInResponse signIn(SignInRequest request, HttpServletResponse response) {
+    public LoginResponse login(LoginRequest request, HttpServletResponse response) {
         // 사용자 조회
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 
-        // 비밀번호 일치 여부 확인
+        // 이메일은 맞지만 비밀번호 틀림
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new UserException(ErrorStatus.WRONG_PASSWORD);
         }
 
         // JWT 토큰 생성
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
         // Redis에 저장
         redisUtil.saveRefreshToken(user.getUserId().toString(), refreshToken, 60 * 60 * 24 * 14); // 2주
 
-        return SignInResponse.builder()
+        return LoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
@@ -78,7 +80,7 @@ public class UserServiceImpl implements UserService {
         String token = jwtUtil.resolveToken(request);
 
         if (token == null || !jwtUtil.validateToken(token)) {
-            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+            throw new UserException(ErrorStatus.TOKEN_NOT_FOUND);
         }
 
         Long userId = jwtUtil.getUserId(token);
