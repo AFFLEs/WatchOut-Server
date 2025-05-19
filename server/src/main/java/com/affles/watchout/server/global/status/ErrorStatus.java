@@ -27,8 +27,15 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 여행 관련 에러
     TRAVEL_NOT_FOUND(HttpStatus.NOT_FOUND, "등록한 여행 일정이 없습니다."),
-    TRAVEL_DATE_REQUIRED(HttpStatus.BAD_REQUEST, "출발일과 도착일은 필수입니다.");
+    TRAVEL_DATE_REQUIRED(HttpStatus.BAD_REQUEST, "출발일과 도착일은 필수입니다."),
 
+    // 장소 관련 에러
+    SPOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 장소를 찾을 수 없습니다."),
+    SPOT_DATE_REQUIRED(HttpStatus.BAD_REQUEST, "장소 날짜는 필수입니다."),
+    SPOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 장소에 접근할 수 없습니다."),
+    SPOT_TIME_REQUIRED(HttpStatus.BAD_REQUEST, "방문 시간이 필요합니다."),
+    SPOT_NAME_REQUIRED(HttpStatus.BAD_REQUEST, "장소명이 필요합니다."),
+    SPOT_DETAIL_REQUIRED(HttpStatus.BAD_REQUEST, "장소 상세 주소가 필요합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

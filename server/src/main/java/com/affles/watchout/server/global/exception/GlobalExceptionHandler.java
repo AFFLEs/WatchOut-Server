@@ -31,6 +31,16 @@ public class GlobalExceptionHandler {
                         null));
     }
 
+    @ExceptionHandler(SpotException.class)
+    public ResponseEntity<ApiResponse<?>> handleSpotException(SpotException e) {
+        return ResponseEntity
+                .status(e.getErrorStatus().getHttpStatus())
+                .body(ApiResponse.onFailure(
+                        e.getErrorStatus().getMessage(),
+                        e.getErrorStatus().getHttpStatus().value(),
+                        null));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> handleValidationException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
