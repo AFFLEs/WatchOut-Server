@@ -62,4 +62,22 @@ public class UserDTO {
             private String refreshToken;
         }
     }
+
+    public static class UserSettingRequest {
+
+        @Getter
+        @Setter
+        public static class ConsentSettingRequest {
+            private Boolean agreeEmergencyDataShare;
+            private Boolean allowLocationTracking;
+        }
+
+        @Getter
+        @Setter
+        public static class AlertSettingRequest {
+            private Boolean vibrationAlert;
+            private Boolean enableWatchEmergencySignal;
+            private String guardianPhone;
+        }
+    }
 }

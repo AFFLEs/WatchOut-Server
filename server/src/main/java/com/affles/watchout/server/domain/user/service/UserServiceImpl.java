@@ -3,6 +3,8 @@ package com.affles.watchout.server.domain.user.service;
 import com.affles.watchout.server.domain.user.converter.UserConverter;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.AlertSettingRequest;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.ConsentSettingRequest;
 import com.affles.watchout.server.domain.user.entity.User;
 import com.affles.watchout.server.domain.user.repository.UserRepository;
 import com.affles.watchout.server.global.exception.UserException;
@@ -90,4 +92,54 @@ public class UserServiceImpl implements UserService {
         redisUtil.addTokenToBlacklist(token, expiration);
     }
 
+    // 유저 동의 설정 관련
+    private User getUser(HttpServletRequest request) {
+        Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(request));
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    @Override
+    public void updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setAgreeEmergencyDataShare(request.getAgreeEmergencyDataShare());
+        user.setAllowLocationTracking(request.getAllowLocationTracking());
+    }
+
+    @Override
+    public void updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setAgreeEmergencyDataShare(value);
+    }
+
+    @Override
+    public void updateLocationConsent(Boolean value, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setAllowLocationTracking(value);
+    }
+
+    @Override
+    public void updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setVibrationAlert(request.getVibrationAlert());
+        user.setEnableWatchEmergencySignal(request.getEnableWatchEmergencySignal());
+        user.setGuardianPhone(request.getGuardianPhone());
+    }
+
+    @Override
+    public void updateVibrationAlert(Boolean value, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setVibrationAlert(value);
+    }
+
+    @Override
+    public void updateWatchEmergency(Boolean value, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setEnableWatchEmergencySignal(value);
+    }
+
+    @Override
+    public void updateGuardianPhone(String phone, HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+        user.setGuardianPhone(phone);
+    }
 }
