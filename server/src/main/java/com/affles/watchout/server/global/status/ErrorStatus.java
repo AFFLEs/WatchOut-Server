@@ -25,6 +25,15 @@ public enum ErrorStatus implements BaseErrorCode {
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "로그인 후 이용 가능합니다."),
     WRONG_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다."),
 
+    // 사용자 동의/허용 관련 에러
+    GUARDIAN_PHONE_REQUIRED(HttpStatus.BAD_REQUEST, "보호자 연락처는 필수입니다."),
+    CONSENT_FIELD_REQUIRED(HttpStatus.BAD_REQUEST, "응급 데이터 공유 허용 및 위치 추적 허용 필드는 모두 필수입니다."),
+    EMERGENCY_CONSENT_REQUIRED(HttpStatus.BAD_REQUEST, "응급 상황 데이터 공유 동의 여부는 필수입니다."),
+    LOCATION_CONSENT_REQUIRED(HttpStatus.BAD_REQUEST, "위치 추적 허용 여부는 필수입니다."),
+    ALERT_FIELD_REQUIRED(HttpStatus.BAD_REQUEST, "진동, 구조 요청, 보호자 번호는 모두 필수입니다."),
+    VIBRATION_REQUIRED(HttpStatus.BAD_REQUEST, "진동 알림 여부는 필수입니다."),
+    WATCH_EMERGENCY_REQUIRED(HttpStatus.BAD_REQUEST, "긴급 구조 요청 여부는 필수입니다."),
+
     // 여행 관련 에러
     TRAVEL_NOT_FOUND(HttpStatus.NOT_FOUND, "등록한 여행 일정이 없습니다."),
     TRAVEL_DATE_REQUIRED(HttpStatus.BAD_REQUEST, "출발일과 도착일은 필수입니다."),

@@ -99,6 +99,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ConsentResponse updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader) {
+        if (request.getAgreeEmergencyDataShare() == null || request.getAllowLocationTracking() == null) {
+            throw new UserException(ErrorStatus.CONSENT_FIELD_REQUIRED);
+        }
         User user = getUser(requestHeader);
         user.setAgreeEmergencyDataShare(request.getAgreeEmergencyDataShare());
         user.setAllowLocationTracking(request.getAllowLocationTracking());
@@ -110,6 +113,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.EMERGENCY_CONSENT_REQUIRED);
         User user = getUser(requestHeader);
         user.setAgreeEmergencyDataShare(value);
         return EmergencyConsentResponse.builder()
@@ -119,6 +123,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LocationConsentResponse updateLocationConsent(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.LOCATION_CONSENT_REQUIRED);
         User user = getUser(requestHeader);
         user.setAllowLocationTracking(value);
         return LocationConsentResponse.builder()
@@ -128,6 +133,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AlertResponse updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader) {
+        if (request.getVibrationAlert() == null || request.getEnableWatchEmergencySignal() == null || request.getGuardianPhone() == null) {
+            throw new UserException(ErrorStatus.ALERT_FIELD_REQUIRED);
+        }
         User user = getUser(requestHeader);
         user.setVibrationAlert(request.getVibrationAlert());
         user.setEnableWatchEmergencySignal(request.getEnableWatchEmergencySignal());
@@ -141,6 +149,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public VibrationResponse updateVibrationAlert(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.VIBRATION_REQUIRED);
         User user = getUser(requestHeader);
         user.setVibrationAlert(value);
         return VibrationResponse.builder()
@@ -150,6 +159,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public WatchEmergencyResponse updateWatchEmergency(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.WATCH_EMERGENCY_REQUIRED);
         User user = getUser(requestHeader);
         user.setEnableWatchEmergencySignal(value);
         return WatchEmergencyResponse.builder()
@@ -159,6 +169,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GuardianPhoneResponse updateGuardianPhone(String phone, HttpServletRequest requestHeader) {
+        if (phone == null || phone.isBlank()) {
+            throw new UserException(ErrorStatus.GUARDIAN_PHONE_REQUIRED);
+        }
         User user = getUser(requestHeader);
         user.setGuardianPhone(phone);
         return GuardianPhoneResponse.builder()
