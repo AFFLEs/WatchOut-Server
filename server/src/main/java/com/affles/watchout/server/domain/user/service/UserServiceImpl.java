@@ -3,6 +3,7 @@ package com.affles.watchout.server.domain.user.service;
 import com.affles.watchout.server.domain.user.converter.UserConverter;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.*;
 import com.affles.watchout.server.domain.user.entity.User;
 import com.affles.watchout.server.domain.user.repository.UserRepository;
 import com.affles.watchout.server.global.exception.UserException;
@@ -90,4 +91,91 @@ public class UserServiceImpl implements UserService {
         redisUtil.addTokenToBlacklist(token, expiration);
     }
 
+    // 유저 동의 설정 관련
+    private User getUser(HttpServletRequest request) {
+        Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(request));
+        return userRepository.findById(userId).orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+    }
+
+    @Override
+    public ConsentResponse updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader) {
+        if (request.getAgreeEmergencyDataShare() == null || request.getAllowLocationTracking() == null) {
+            throw new UserException(ErrorStatus.CONSENT_FIELD_REQUIRED);
+        }
+        User user = getUser(requestHeader);
+        user.setAgreeEmergencyDataShare(request.getAgreeEmergencyDataShare());
+        user.setAllowLocationTracking(request.getAllowLocationTracking());
+        return ConsentResponse.builder()
+                .agreeEmergencyDataShare(user.getAgreeEmergencyDataShare())
+                .allowLocationTracking(user.getAllowLocationTracking())
+                .build();
+    }
+
+    @Override
+    public EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.EMERGENCY_CONSENT_REQUIRED);
+        User user = getUser(requestHeader);
+        user.setAgreeEmergencyDataShare(value);
+        return EmergencyConsentResponse.builder()
+                .agreeEmergencyDataShare(user.getAgreeEmergencyDataShare())
+                .build();
+    }
+
+    @Override
+    public LocationConsentResponse updateLocationConsent(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.LOCATION_CONSENT_REQUIRED);
+        User user = getUser(requestHeader);
+        user.setAllowLocationTracking(value);
+        return LocationConsentResponse.builder()
+                .allowLocationTracking(user.getAllowLocationTracking())
+                .build();
+    }
+
+    @Override
+    public AlertResponse updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader) {
+        if (request.getVibrationAlert() == null || request.getEnableWatchEmergencySignal() == null || request.getGuardianPhone() == null) {
+            throw new UserException(ErrorStatus.ALERT_FIELD_REQUIRED);
+        }
+        User user = getUser(requestHeader);
+        user.setVibrationAlert(request.getVibrationAlert());
+        user.setEnableWatchEmergencySignal(request.getEnableWatchEmergencySignal());
+        user.setGuardianPhone(request.getGuardianPhone());
+        return AlertResponse.builder()
+                .vibrationAlert(user.getVibrationAlert())
+                .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
+                .guardianPhone(user.getGuardianPhone())
+                .build();
+    }
+
+    @Override
+    public VibrationResponse updateVibrationAlert(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.VIBRATION_REQUIRED);
+        User user = getUser(requestHeader);
+        user.setVibrationAlert(value);
+        return VibrationResponse.builder()
+                .vibrationAlert(user.getVibrationAlert())
+                .build();
+    }
+
+    @Override
+    public WatchEmergencyResponse updateWatchEmergency(Boolean value, HttpServletRequest requestHeader) {
+        if (value == null) throw new UserException(ErrorStatus.WATCH_EMERGENCY_REQUIRED);
+        User user = getUser(requestHeader);
+        user.setEnableWatchEmergencySignal(value);
+        return WatchEmergencyResponse.builder()
+                .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
+                .build();
+    }
+
+    @Override
+    public GuardianPhoneResponse updateGuardianPhone(String phone, HttpServletRequest requestHeader) {
+        if (phone == null || phone.isBlank()) {
+            throw new UserException(ErrorStatus.GUARDIAN_PHONE_REQUIRED);
+        }
+        User user = getUser(requestHeader);
+        user.setGuardianPhone(phone);
+        return GuardianPhoneResponse.builder()
+                .guardianPhone(user.getGuardianPhone())
+                .build();
+    }
 }

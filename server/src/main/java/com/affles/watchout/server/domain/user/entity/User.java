@@ -38,12 +38,16 @@ public class User extends BaseEntity {
 
     // private String connectedWatch; 워치 연결
 
-    // 동의 여부
+    // 동의 여부 필드들
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean vibrationAlert;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean agreeEmergencyDataShare;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean allowLocationTracking;
 
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean enableWatchEmergencySignal;
 }
