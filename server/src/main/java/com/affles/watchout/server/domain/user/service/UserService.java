@@ -1,11 +1,8 @@
 package com.affles.watchout.server.domain.user.service;
 
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.LoginRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.SignUpRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.LoginResponse;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.SignUpResponse;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.AlertSettingRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.ConsentSettingRequest;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,11 +14,11 @@ public interface UserService {
     void logout(HttpServletRequest request);
 
     // 유저 동의 설정 관련
-    void updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader);
-    void updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader);
-    void updateLocationConsent(Boolean value, HttpServletRequest requestHeader);
-    void updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader);
-    void updateVibrationAlert(Boolean value, HttpServletRequest requestHeader);
-    void updateWatchEmergency(Boolean value, HttpServletRequest requestHeader);
-    void updateGuardianPhone(String phone, HttpServletRequest requestHeader);
+    ConsentResponse updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader);
+    EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader);
+    LocationConsentResponse updateLocationConsent(Boolean value, HttpServletRequest requestHeader);
+    AlertResponse updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader);
+    VibrationResponse updateVibrationAlert(Boolean value, HttpServletRequest requestHeader);
+    WatchEmergencyResponse updateWatchEmergency(Boolean value, HttpServletRequest requestHeader);
+    GuardianPhoneResponse updateGuardianPhone(String phone, HttpServletRequest requestHeader);
 }

@@ -3,8 +3,7 @@ package com.affles.watchout.server.domain.user.service;
 import com.affles.watchout.server.domain.user.converter.UserConverter;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.AlertSettingRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.ConsentSettingRequest;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.*;
 import com.affles.watchout.server.domain.user.entity.User;
 import com.affles.watchout.server.domain.user.repository.UserRepository;
 import com.affles.watchout.server.global.exception.UserException;
@@ -99,47 +98,71 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader) {
+    public ConsentResponse updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setAgreeEmergencyDataShare(request.getAgreeEmergencyDataShare());
         user.setAllowLocationTracking(request.getAllowLocationTracking());
+        return ConsentResponse.builder()
+                .agreeEmergencyDataShare(user.getAgreeEmergencyDataShare())
+                .allowLocationTracking(user.getAllowLocationTracking())
+                .build();
     }
 
     @Override
-    public void updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader) {
+    public EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setAgreeEmergencyDataShare(value);
+        return EmergencyConsentResponse.builder()
+                .agreeEmergencyDataShare(user.getAgreeEmergencyDataShare())
+                .build();
     }
 
     @Override
-    public void updateLocationConsent(Boolean value, HttpServletRequest requestHeader) {
+    public LocationConsentResponse updateLocationConsent(Boolean value, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setAllowLocationTracking(value);
+        return LocationConsentResponse.builder()
+                .allowLocationTracking(user.getAllowLocationTracking())
+                .build();
     }
 
     @Override
-    public void updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader) {
+    public AlertResponse updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setVibrationAlert(request.getVibrationAlert());
         user.setEnableWatchEmergencySignal(request.getEnableWatchEmergencySignal());
         user.setGuardianPhone(request.getGuardianPhone());
+        return AlertResponse.builder()
+                .vibrationAlert(user.getVibrationAlert())
+                .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
+                .guardianPhone(user.getGuardianPhone())
+                .build();
     }
 
     @Override
-    public void updateVibrationAlert(Boolean value, HttpServletRequest requestHeader) {
+    public VibrationResponse updateVibrationAlert(Boolean value, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setVibrationAlert(value);
+        return VibrationResponse.builder()
+                .vibrationAlert(user.getVibrationAlert())
+                .build();
     }
 
     @Override
-    public void updateWatchEmergency(Boolean value, HttpServletRequest requestHeader) {
+    public WatchEmergencyResponse updateWatchEmergency(Boolean value, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setEnableWatchEmergencySignal(value);
+        return WatchEmergencyResponse.builder()
+                .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
+                .build();
     }
 
     @Override
-    public void updateGuardianPhone(String phone, HttpServletRequest requestHeader) {
+    public GuardianPhoneResponse updateGuardianPhone(String phone, HttpServletRequest requestHeader) {
         User user = getUser(requestHeader);
         user.setGuardianPhone(phone);
+        return GuardianPhoneResponse.builder()
+                .guardianPhone(user.getGuardianPhone())
+                .build();
     }
 }

@@ -1,11 +1,8 @@
 package com.affles.watchout.server.domain.user.controller;
 
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.LoginRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.SignUpRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.LoginResponse;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.SignUpResponse;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.AlertSettingRequest;
-import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.ConsentSettingRequest;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
+import com.affles.watchout.server.domain.user.dto.UserDTO.UserSettingRequest.*;
 import com.affles.watchout.server.domain.user.service.UserService;
 import com.affles.watchout.server.global.common.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,52 +38,45 @@ public class UserController {
 
     // 유저 동의 설정 관련
     // (0) 응급 데이터 + 위치 추적 동시 설정
-    @PatchMapping("/consents")
-    public ApiResponse<Void> updateConsents(@RequestBody ConsentSettingRequest request, HttpServletRequest httpRequest) {
-        userService.updateConsentSettings(request, httpRequest);
-        return ApiResponse.onSuccess(null);
+    @PatchMapping("/settings/consents")
+    public ApiResponse<ConsentResponse> updateConsents(@RequestBody ConsentSettingRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateConsentSettings(request, httpRequest));
     }
 
     // (1) 응급 상황 데이터 동의 설정
     @PatchMapping("/settings/emergency")
-    public ApiResponse<Void> updateEmergencyConsent(@RequestParam Boolean value, HttpServletRequest httpRequest) {
-        userService.updateEmergencyConsent(value, httpRequest);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<EmergencyConsentResponse> updateEmergencyConsent(@RequestBody EmergencyConsentRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateEmergencyConsent(request.getAgreeEmergencyDataShare(), httpRequest));
     }
 
     // (2) 위치 추적 허용 설정
     @PatchMapping("/settings/location")
-    public ApiResponse<Void> updateLocationConsent(@RequestParam Boolean value, HttpServletRequest httpRequest) {
-        userService.updateLocationConsent(value, httpRequest);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<LocationConsentResponse> updateLocationConsent(@RequestBody LocationConsentRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateLocationConsent(request.getAllowLocationTracking(), httpRequest));
     }
 
     // (3) 진동 + 구조요청 + 보호자번호 동시 설정
-    @PatchMapping("/alerts")
-    public ApiResponse<Void> updateAlertSettings(@RequestBody AlertSettingRequest request, HttpServletRequest httpRequest) {
-        userService.updateAlertSettings(request, httpRequest);
-        return ApiResponse.onSuccess(null);
+    @PatchMapping("/settings/alerts")
+    public ApiResponse<AlertResponse> updateAlertSettings(@RequestBody AlertSettingRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateAlertSettings(request, httpRequest));
     }
 
     // (4) 진동 설정
     @PatchMapping("/settings/vibration")
-    public ApiResponse<Void> updateVibrationAlert(@RequestParam Boolean value, HttpServletRequest httpRequest) {
-        userService.updateVibrationAlert(value, httpRequest);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<VibrationResponse> updateVibrationAlert(@RequestBody VibrationRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateVibrationAlert(request.getVibrationAlert(), httpRequest));
     }
 
     // (5) 구조 요청 설정
     @PatchMapping("/settings/watch-emergency")
-    public ApiResponse<Void> updateWatchEmergency(@RequestParam Boolean value, HttpServletRequest httpRequest) {
-        userService.updateWatchEmergency(value, httpRequest);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<WatchEmergencyResponse> updateWatchEmergency(@RequestBody WatchEmergencyRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateWatchEmergency(request.getEnableWatchEmergencySignal(), httpRequest));
     }
 
     // (6) 보호자 번호 설정
     @PatchMapping("/settings/guardian-phone")
-    public ApiResponse<Void> updateGuardianPhone(@RequestParam String phone, HttpServletRequest httpRequest) {
-        userService.updateGuardianPhone(phone, httpRequest);
-        return ApiResponse.onSuccess(null);
+    public ApiResponse<GuardianPhoneResponse> updateGuardianPhone(@RequestBody GuardianPhoneRequest request, HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.updateGuardianPhone(request.getGuardianPhone(), httpRequest));
     }
 
 }

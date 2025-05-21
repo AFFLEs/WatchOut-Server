@@ -61,6 +61,61 @@ public class UserDTO {
             private String accessToken;
             private String refreshToken;
         }
+
+        @Builder
+        @Getter
+        public static class UserSettingResponse {
+            private Boolean agreeEmergencyDataShare;
+            private Boolean allowLocationTracking;
+            private Boolean vibrationAlert;
+            private Boolean enableWatchEmergencySignal;
+            private String guardianPhone;
+        }
+
+        @Builder
+        @Getter
+        public static class ConsentResponse {
+            private Boolean agreeEmergencyDataShare;
+            private Boolean allowLocationTracking;
+        }
+
+        @Builder
+        @Getter
+        public static class EmergencyConsentResponse {
+            private Boolean agreeEmergencyDataShare;
+        }
+
+        @Builder
+        @Getter
+        public static class LocationConsentResponse {
+            private Boolean allowLocationTracking;
+        }
+
+        @Builder
+        @Getter
+        public static class AlertResponse {
+            private Boolean vibrationAlert;
+            private Boolean enableWatchEmergencySignal;
+            private String guardianPhone;
+        }
+
+        @Builder
+        @Getter
+        public static class VibrationResponse {
+            private Boolean vibrationAlert;
+        }
+
+        @Builder
+        @Getter
+        public static class WatchEmergencyResponse {
+            private Boolean enableWatchEmergencySignal;
+        }
+
+        @Builder
+        @Getter
+        public static class GuardianPhoneResponse {
+            private String guardianPhone;
+        }
     }
 
     public static class UserSettingRequest {
@@ -72,11 +127,41 @@ public class UserDTO {
             private Boolean allowLocationTracking;
         }
 
+        @Builder
+        @Getter
+        public static class EmergencyConsentRequest {
+            private Boolean agreeEmergencyDataShare;
+        }
+
+        @Builder
+        @Getter
+        public static class LocationConsentRequest {
+            private Boolean allowLocationTracking;
+        }
+
         @Getter
         @Setter
         public static class AlertSettingRequest {
             private Boolean vibrationAlert;
             private Boolean enableWatchEmergencySignal;
+            private String guardianPhone;
+        }
+
+        @Builder
+        @Getter
+        public static class VibrationRequest {
+            private Boolean vibrationAlert;
+        }
+
+        @Builder
+        @Getter
+        public static class WatchEmergencyRequest {
+            private Boolean enableWatchEmergencySignal;
+        }
+
+        @Builder
+        @Getter
+        public static class GuardianPhoneRequest {
             private String guardianPhone;
         }
     }
