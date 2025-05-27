@@ -45,6 +45,9 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// sql 연동
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
 }
 
 //tasks.named('test') {
