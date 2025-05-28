@@ -17,7 +17,6 @@ public class SpotDTO {
             @NotNull(message = "방문 날짜는 필수입니다.")
             private LocalDate spotDate;
 
-            @NotNull(message = "방문 시간은 필수입니다.")
             private LocalTime spotTime;
 
             @NotBlank(message = "장소명은 필수입니다.")

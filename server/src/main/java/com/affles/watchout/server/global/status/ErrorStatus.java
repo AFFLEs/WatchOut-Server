@@ -42,7 +42,6 @@ public enum ErrorStatus implements BaseErrorCode {
     SPOT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 장소를 찾을 수 없습니다."),
     SPOT_DATE_REQUIRED(HttpStatus.BAD_REQUEST, "장소 날짜는 필수입니다."),
     SPOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 장소에 접근할 수 없습니다."),
-    SPOT_TIME_REQUIRED(HttpStatus.BAD_REQUEST, "방문 시간이 필요합니다."),
     SPOT_NAME_REQUIRED(HttpStatus.BAD_REQUEST, "장소명이 필요합니다."),
     SPOT_DETAIL_REQUIRED(HttpStatus.BAD_REQUEST, "장소 상세 주소가 필요합니다.");
 
