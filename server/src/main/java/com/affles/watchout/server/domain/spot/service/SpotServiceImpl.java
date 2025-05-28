@@ -36,7 +36,6 @@ public class SpotServiceImpl implements SpotService {
     @Override
     public SpotInfo createSpot(CreateSpotRequest request, HttpServletRequest requestHeader) {
         if (request.getSpotDate() == null) throw new SpotException(ErrorStatus.SPOT_DATE_REQUIRED);
-        if (request.getSpotTime() == null) throw new SpotException(ErrorStatus.SPOT_TIME_REQUIRED);
         if (request.getSpotName() == null || request.getSpotName().isBlank()) throw new SpotException(ErrorStatus.SPOT_NAME_REQUIRED);
         if (request.getSpotDetail() == null || request.getSpotDetail().isBlank()) throw new SpotException(ErrorStatus.SPOT_DETAIL_REQUIRED);
 
