@@ -1,5 +1,7 @@
 package com.affles.watchout.server.domain.user.service;
 
+import com.affles.watchout.server.domain.travel.entity.Travel;
+import com.affles.watchout.server.domain.travel.repository.TravelRepository;
 import com.affles.watchout.server.domain.user.converter.UserConverter;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserRequest.*;
 import com.affles.watchout.server.domain.user.dto.UserDTO.UserResponse.*;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TravelRepository travelRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
@@ -45,6 +48,12 @@ public class UserServiceImpl implements UserService {
         // 엔티티 변환 및 저장
         User user = UserConverter.toUser(request, encodedPassword);
         userRepository.save(user);
+
+        travelRepository.save(Travel.builder()
+                .user(user)
+                .departDate(request.getTravelInfo().getDepartDate())
+                .arriveDate(request.getTravelInfo().getArriveDate())
+                .build());
 
         return UserConverter.toSignUpResponse(user, request);
     }
