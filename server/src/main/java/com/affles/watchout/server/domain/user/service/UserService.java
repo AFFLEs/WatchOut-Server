@@ -14,10 +14,8 @@ public interface UserService {
     void logout(HttpServletRequest request);
 
     // 유저 동의 설정 관련
-    ConsentResponse updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader);
     EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader);
     LocationConsentResponse updateLocationConsent(Boolean value, HttpServletRequest requestHeader);
-    AlertResponse updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader);
     VibrationResponse updateVibrationAlert(Boolean value, HttpServletRequest requestHeader);
     WatchEmergencyResponse updateWatchEmergency(Boolean value, HttpServletRequest requestHeader);
     GuardianPhoneResponse updateGuardianPhone(String phone, HttpServletRequest requestHeader);
