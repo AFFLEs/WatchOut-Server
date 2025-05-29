@@ -12,32 +12,45 @@ public class UserDTO {
 
         @Getter
         public static class SignUpRequest {
-            @NotBlank
-            private String name;
+            @NotNull private UserInfo userInfo;
+            @NotNull private TermsAgreement1 termsAgreement1;
+            @NotNull private TermsAgreement2 termsAgreement2;
+            @NotNull private TravelInfo travelInfo;
 
-            @NotNull
-            private LocalDate birthdate;
+            @Getter
+            public static class UserInfo {
+                @NotBlank private String name;
+                @NotNull private LocalDate birthdate;
+                @NotBlank private String email;
+                @NotBlank private String password;
+                @NotBlank private String confirmPassword;
+                @NotBlank private String phoneNumber;
+            }
 
-            @NotBlank
-            private String email;
+            @Getter
+            public static class TermsAgreement1 {
+                @NotNull private Boolean agreeEmergencyDataShare;
+                @NotNull private Boolean allowLocationTracking;
+            }
 
-            @NotBlank
-            private String password;
+            @Getter
+            public static class TermsAgreement2 {
+                @NotNull private Boolean vibrationAlert;
+                @NotNull private Boolean enableWatchEmergencySignal;
+                @NotBlank private String guardianPhone;
+            }
 
-            @NotBlank
-            private String confirmPassword;
-
-            @NotBlank
-            private String phoneNumber;
+            @Getter
+            public static class TravelInfo {
+                @NotNull private LocalDate departDate;
+                @NotNull private LocalDate arriveDate;
+            }
         }
 
         @Getter
         public static class LoginRequest {
-            @NotBlank
-            private String email;
-
-            @NotBlank
-            private String password;
+            @NotBlank private String email;
+            @NotBlank private String password;
         }
     }
 
@@ -48,9 +61,41 @@ public class UserDTO {
         @NoArgsConstructor
         @AllArgsConstructor
         public static class SignUpResponse {
-            private Long userId;
-            private String name;
-            private String email;
+            private UserInfo userInfo;
+            private TermsAgreement1 termsAgreement1;
+            private TermsAgreement2 termsAgreement2;
+            private TravelInfo travelInfo;
+
+            @Builder
+            @Getter
+            public static class UserInfo {
+                private String name;
+                private LocalDate birthdate;
+                private String email;
+                private String phoneNumber;
+            }
+
+            @Builder
+            @Getter
+            public static class TermsAgreement1 {
+                private Boolean agreeEmergencyDataShare;
+                private Boolean allowLocationTracking;
+            }
+
+            @Builder
+            @Getter
+            public static class TermsAgreement2 {
+                private Boolean vibrationAlert;
+                private Boolean enableWatchEmergencySignal;
+                private String guardianPhone;
+            }
+
+            @Builder
+            @Getter
+            public static class TravelInfo {
+                private LocalDate departDate;
+                private LocalDate arriveDate;
+            }
         }
 
         @Builder
@@ -64,23 +109,6 @@ public class UserDTO {
 
         @Builder
         @Getter
-        public static class UserSettingResponse {
-            private Boolean agreeEmergencyDataShare;
-            private Boolean allowLocationTracking;
-            private Boolean vibrationAlert;
-            private Boolean enableWatchEmergencySignal;
-            private String guardianPhone;
-        }
-
-        @Builder
-        @Getter
-        public static class ConsentResponse {
-            private Boolean agreeEmergencyDataShare;
-            private Boolean allowLocationTracking;
-        }
-
-        @Builder
-        @Getter
         public static class EmergencyConsentResponse {
             private Boolean agreeEmergencyDataShare;
         }
@@ -89,14 +117,6 @@ public class UserDTO {
         @Getter
         public static class LocationConsentResponse {
             private Boolean allowLocationTracking;
-        }
-
-        @Builder
-        @Getter
-        public static class AlertResponse {
-            private Boolean vibrationAlert;
-            private Boolean enableWatchEmergencySignal;
-            private String guardianPhone;
         }
 
         @Builder
@@ -119,14 +139,6 @@ public class UserDTO {
     }
 
     public static class UserSettingRequest {
-
-        @Getter
-        @Setter
-        public static class ConsentSettingRequest {
-            private Boolean agreeEmergencyDataShare;
-            private Boolean allowLocationTracking;
-        }
-
         @Builder
         @Getter
         public static class EmergencyConsentRequest {
@@ -137,14 +149,6 @@ public class UserDTO {
         @Getter
         public static class LocationConsentRequest {
             private Boolean allowLocationTracking;
-        }
-
-        @Getter
-        @Setter
-        public static class AlertSettingRequest {
-            private Boolean vibrationAlert;
-            private Boolean enableWatchEmergencySignal;
-            private String guardianPhone;
         }
 
         @Builder

@@ -30,23 +30,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public SignUpResponse signUp(SignUpRequest request) {
         // 이메일 중복 체크
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(request.getUserInfo().getEmail()).isPresent()) {
             throw new UserException(ErrorStatus.USER_ALREADY_EXISTS);
         }
 
         // 비밀번호 확인
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
+        if (!request.getUserInfo().getPassword().equals(request.getUserInfo().getConfirmPassword())) {
             throw new UserException(ErrorStatus.PASSWORD_NOT_MATCH);
         }
 
         // 비밀번호 암호화
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        String encodedPassword = passwordEncoder.encode(request.getUserInfo().getPassword());
 
         // 엔티티 변환 및 저장
         User user = UserConverter.toUser(request, encodedPassword);
         userRepository.save(user);
 
-        return UserConverter.toSignUpResponse(user);
+        return UserConverter.toSignUpResponse(user, request);
     }
 
     @Override
@@ -98,20 +98,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ConsentResponse updateConsentSettings(ConsentSettingRequest request, HttpServletRequest requestHeader) {
-        if (request.getAgreeEmergencyDataShare() == null || request.getAllowLocationTracking() == null) {
-            throw new UserException(ErrorStatus.CONSENT_FIELD_REQUIRED);
-        }
-        User user = getUser(requestHeader);
-        user.setAgreeEmergencyDataShare(request.getAgreeEmergencyDataShare());
-        user.setAllowLocationTracking(request.getAllowLocationTracking());
-        return ConsentResponse.builder()
-                .agreeEmergencyDataShare(user.getAgreeEmergencyDataShare())
-                .allowLocationTracking(user.getAllowLocationTracking())
-                .build();
-    }
-
-    @Override
     public EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader) {
         if (value == null) throw new UserException(ErrorStatus.EMERGENCY_CONSENT_REQUIRED);
         User user = getUser(requestHeader);
@@ -128,22 +114,6 @@ public class UserServiceImpl implements UserService {
         user.setAllowLocationTracking(value);
         return LocationConsentResponse.builder()
                 .allowLocationTracking(user.getAllowLocationTracking())
-                .build();
-    }
-
-    @Override
-    public AlertResponse updateAlertSettings(AlertSettingRequest request, HttpServletRequest requestHeader) {
-        if (request.getVibrationAlert() == null || request.getEnableWatchEmergencySignal() == null || request.getGuardianPhone() == null) {
-            throw new UserException(ErrorStatus.ALERT_FIELD_REQUIRED);
-        }
-        User user = getUser(requestHeader);
-        user.setVibrationAlert(request.getVibrationAlert());
-        user.setEnableWatchEmergencySignal(request.getEnableWatchEmergencySignal());
-        user.setGuardianPhone(request.getGuardianPhone());
-        return AlertResponse.builder()
-                .vibrationAlert(user.getVibrationAlert())
-                .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
-                .guardianPhone(user.getGuardianPhone())
                 .build();
     }
 
