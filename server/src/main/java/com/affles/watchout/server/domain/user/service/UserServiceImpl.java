@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
         // 응답 헤더에 토큰 추가
         response.setHeader("Authorization", "Bearer " + accessToken);
 
-        // Redis에 저장
+        // Redis에 refreshToken 저장
         redisUtil.saveRefreshToken(user.getUserId().toString(), refreshToken, 60 * 60 * 24 * 14); // 2주
 
         return LoginResponse.builder()
