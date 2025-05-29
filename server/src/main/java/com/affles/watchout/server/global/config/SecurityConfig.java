@@ -3,7 +3,7 @@ package com.affles.watchout.server.global.config;
 import com.affles.watchout.server.global.jwt.JwtAuthenticationEntryPoint;
 import com.affles.watchout.server.global.jwt.JwtAuthenticationFilter;
 import com.affles.watchout.server.global.jwt.JwtUtil;
-import com.affles.watchout.server.global.util.RedisUtil;
+import com.affles.watchout.server.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

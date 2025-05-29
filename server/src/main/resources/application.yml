@@ -18,10 +18,10 @@ spring:
 
   data:
     redis:
-      host: ${REDIS_URL}
+      host: ${REDIS_HOST}
       port: ${REDIS_PORT}
-      username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
+      tls: ${REDIS_TLS}
 
   logging:
     level:

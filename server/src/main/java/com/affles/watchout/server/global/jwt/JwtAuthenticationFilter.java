@@ -2,7 +2,7 @@ package com.affles.watchout.server.global.jwt;
 
 import com.affles.watchout.server.global.common.ApiResponse;
 import com.affles.watchout.server.global.status.ErrorStatus;
-import com.affles.watchout.server.global.util.RedisUtil;
+import com.affles.watchout.server.global.redis.RedisUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;

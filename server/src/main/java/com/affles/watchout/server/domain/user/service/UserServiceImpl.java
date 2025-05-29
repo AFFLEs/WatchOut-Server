@@ -9,7 +9,7 @@ import com.affles.watchout.server.domain.user.repository.UserRepository;
 import com.affles.watchout.server.global.exception.UserException;
 import com.affles.watchout.server.global.jwt.JwtUtil;
 import com.affles.watchout.server.global.status.ErrorStatus;
-import com.affles.watchout.server.global.util.RedisUtil;
+import com.affles.watchout.server.global.redis.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

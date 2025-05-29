@@ -1,4 +1,4 @@
-package com.affles.watchout.server.global.util;
+package com.affles.watchout.server.global.redis;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
