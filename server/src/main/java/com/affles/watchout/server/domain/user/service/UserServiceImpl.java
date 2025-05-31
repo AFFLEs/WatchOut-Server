@@ -100,6 +100,18 @@ public class UserServiceImpl implements UserService {
         redisUtil.addTokenToBlacklist(token, expiration);
     }
 
+    @Override
+    public UserProfileResponse getUserProfile(HttpServletRequest requestHeader) {
+        User user = getUser(requestHeader);
+
+        return UserProfileResponse.builder()
+                .name(user.getName())
+                .birthdate(user.getBirthdate())
+                .phoneNumber(user.getPhoneNumber())
+                .guardianPhone(user.getGuardianPhone())
+                .build();
+    }
+
     // 유저 동의 설정 관련
     private User getUser(HttpServletRequest request) {
         Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(request));
