@@ -27,3 +27,9 @@ spring:
     level:
       org.springframework: DEBUG
       org.hibernate.SQL: DEBUG
+
+ambee:
+  naturaldisasters:
+    base-url: https://api.ambeedata.com
+  api:
+    key: ${AMBEE_API_KEY}
