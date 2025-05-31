@@ -144,6 +144,8 @@ public class UserDTO {
             private LocalDate birthdate;
             private String phoneNumber;
             private String guardianPhone;
+            private Boolean vibrationAlert;
+            private Boolean enableWatchEmergencySignal;
         }
     }
 

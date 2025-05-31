@@ -109,6 +109,8 @@ public class UserServiceImpl implements UserService {
                 .birthdate(user.getBirthdate())
                 .phoneNumber(user.getPhoneNumber())
                 .guardianPhone(user.getGuardianPhone())
+                .vibrationAlert(user.getVibrationAlert())
+                .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
                 .build();
     }
 
