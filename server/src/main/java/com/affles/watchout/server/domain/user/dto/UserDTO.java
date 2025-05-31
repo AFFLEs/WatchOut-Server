@@ -136,6 +136,15 @@ public class UserDTO {
         public static class GuardianPhoneResponse {
             private String guardianPhone;
         }
+
+        @Builder
+        @Getter
+        public static class UserProfileResponse {
+            private String name;
+            private LocalDate birthdate;
+            private String phoneNumber;
+            private String guardianPhone;
+        }
     }
 
     public static class UserSettingRequest {

@@ -13,6 +13,8 @@ public interface UserService {
 
     void logout(HttpServletRequest request);
 
+    UserProfileResponse getUserProfile(HttpServletRequest requestHeader);
+
     // 유저 동의 설정 관련
     EmergencyConsentResponse updateEmergencyConsent(Boolean value, HttpServletRequest requestHeader);
     LocationConsentResponse updateLocationConsent(Boolean value, HttpServletRequest requestHeader);

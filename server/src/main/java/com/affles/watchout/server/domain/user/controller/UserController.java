@@ -36,6 +36,11 @@ public class UserController {
         return ApiResponse.onSuccess(null);
     }
 
+    @GetMapping("/info")
+    public ApiResponse<UserProfileResponse> getUserProfile(HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(userService.getUserProfile(httpRequest));
+    }
+
     // 유저 동의 설정 관련
     // (1) 응급 상황 데이터 동의 설정
     @PatchMapping("/settings/emergency")

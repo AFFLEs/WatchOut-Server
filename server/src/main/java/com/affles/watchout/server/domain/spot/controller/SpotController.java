@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/spots")
@@ -25,8 +26,8 @@ public class SpotController {
     }
 
     @GetMapping("/latest")
-    public ApiResponse<List<SpotInfo>> getLatestSpots(@RequestParam("date") LocalDate date, HttpServletRequest httpRequest) {
-        return ApiResponse.onSuccess(spotService.getLatestSpotsByDate(date, httpRequest));
+    public ApiResponse<Map<LocalDate, List<SpotInfo>>> getLatestSpotsAllDates(HttpServletRequest httpRequest) {
+        return ApiResponse.onSuccess(spotService.getLatestSpotsByAllDates(httpRequest));
     }
 
     @GetMapping("/detail")
