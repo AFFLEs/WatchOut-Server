@@ -52,6 +52,16 @@ public class GlobalExceptionHandler {
                         null));
     }
 
+    @ExceptionHandler(DisasterException.class)
+    public ResponseEntity<ApiResponse<?>> handleDisasterException(DisasterException e) {
+        return ResponseEntity
+                .status(e.getErrorStatus().getHttpStatus())
+                .body(ApiResponse.onFailure(
+                        e.getErrorStatus().getMessage(),
+                        e.getErrorStatus().getHttpStatus().value(),
+                        null));
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponse<?>> handleConstraintViolationException(ConstraintViolationException e) {
         return ResponseEntity
