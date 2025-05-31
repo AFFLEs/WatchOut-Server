@@ -21,7 +21,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,14 +49,23 @@ public class SpotServiceImpl implements SpotService {
     }
 
     @Override
-    public List<SpotInfo> getLatestSpotsByDate(LocalDate date, HttpServletRequest requestHeader) {
+    public Map<LocalDate, List<SpotInfo>> getLatestSpotsByAllDates(HttpServletRequest requestHeader) {
         Travel travel = getTravelFromRequest(requestHeader);
-        return spotRepository.findTop3ByTravelAndSpotDateOrderBySpotTimeDesc(travel, date)
-                .stream()
-                .map(SpotConverter::toSpotInfo)
-                .toList();
-    }
+        List<Spot> allSpots = spotRepository.findAllByTravel(travel);
 
+        return allSpots.stream()
+                .collect(Collectors.groupingBy(
+                        Spot::getSpotDate,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.stream()
+                                        .sorted(Comparator.comparing(Spot::getSpotTime, Comparator.nullsLast(Comparator.reverseOrder())))
+                                        .limit(3)
+                                        .map(SpotConverter::toSpotInfo)
+                                        .toList()
+                        )
+                ));
+    }
     @Override
     public List<SpotInfo> getSpotDetailsByDate(LocalDate date, HttpServletRequest requestHeader) {
         Travel travel = getTravelFromRequest(requestHeader);

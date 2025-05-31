@@ -9,7 +9,8 @@ import java.util.List;
 
 public interface SpotRepository extends JpaRepository<Spot, Long> {
 
-    List<Spot> findTop3ByTravelAndSpotDateOrderBySpotTimeDesc(Travel travel, LocalDate date); // 내림차순 정렬
+    List<Spot> findAllByTravelAndSpotDateOrderBySpotTimeAsc(Travel travel, LocalDate date);
 
-    List<Spot> findAllByTravelAndSpotDateOrderBySpotTimeAsc(Travel travel, LocalDate date); // 오름차순 정렬
+    List<Spot> findAllByTravel(Travel travel);
+
 }
