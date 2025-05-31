@@ -37,4 +37,10 @@ public class Spot extends BaseEntity {
     private Double longitude;
 
     private LocalTime spotTime;
+
+    @Column(length = 100)
+    private String city;
+
+    @Column(length = 100)
+    private String country;
 }

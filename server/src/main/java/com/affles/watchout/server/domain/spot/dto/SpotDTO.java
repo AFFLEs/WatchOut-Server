@@ -27,6 +27,9 @@ public class SpotDTO {
 
             private Double latitude;
             private Double longitude;
+
+            private String city;
+            private String country;
         }
     }
 
@@ -42,6 +45,8 @@ public class SpotDTO {
             private String spotDetail;
             private Double latitude;
             private Double longitude;
+            private String city;
+            private String country;
         }
 
         @Builder
