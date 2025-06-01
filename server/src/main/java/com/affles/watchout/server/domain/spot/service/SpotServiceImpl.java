@@ -41,6 +41,7 @@ public class SpotServiceImpl implements SpotService {
         if (request.getSpotDate() == null) throw new SpotException(ErrorStatus.SPOT_DATE_REQUIRED);
         if (request.getSpotName() == null || request.getSpotName().isBlank()) throw new SpotException(ErrorStatus.SPOT_NAME_REQUIRED);
         if (request.getSpotDetail() == null || request.getSpotDetail().isBlank()) throw new SpotException(ErrorStatus.SPOT_DETAIL_REQUIRED);
+        if (request.getIsPlan() == null) throw new SpotException(ErrorStatus.SPOT_PLAN_REQUIRED);
 
         Travel travel = getTravelFromRequest(requestHeader);
         Spot spot = SpotConverter.toSpot(request, travel);

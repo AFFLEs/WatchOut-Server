@@ -18,6 +18,7 @@ public class SpotConverter {
                 .longitude(req.getLongitude())
                 .city(req.getCity())
                 .country(req.getCountry())
+                .isPlan(req.getIsPlan())
                 .build();
     }
 
@@ -32,6 +33,7 @@ public class SpotConverter {
                 .longitude(spot.getLongitude())
                 .city(spot.getCity())
                 .country(spot.getCountry())
+                .isPlan(spot.getIsPlan())
                 .build();
     }
 }
