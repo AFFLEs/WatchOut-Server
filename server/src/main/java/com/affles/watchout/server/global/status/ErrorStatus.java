@@ -46,6 +46,7 @@ public enum ErrorStatus implements BaseErrorCode {
     SPOT_FORBIDDEN(HttpStatus.FORBIDDEN, "해당 장소에 접근할 수 없습니다."),
     SPOT_NAME_REQUIRED(HttpStatus.BAD_REQUEST, "장소명이 필요합니다."),
     SPOT_DETAIL_REQUIRED(HttpStatus.BAD_REQUEST, "장소 상세 주소가 필요합니다."),
+    SPOT_PLAN_REQUIRED(HttpStatus.BAD_REQUEST, "장소 수동/자동 여부는 필수입니다."),
 
     // 자연재해 관련 에러
     DISASTER_PARAM_INVALID(HttpStatus.BAD_REQUEST, "잘못된 위도/경도 입니다."),

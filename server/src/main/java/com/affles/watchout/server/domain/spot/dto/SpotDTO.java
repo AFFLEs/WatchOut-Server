@@ -25,6 +25,9 @@ public class SpotDTO {
             @NotBlank(message = "장소 설명은 필수입니다.")
             private String spotDetail;
 
+            @NotNull(message = "수동 여부는 필수입니다.")
+            private Boolean isPlan;
+
             private Double latitude;
             private Double longitude;
 
@@ -47,6 +50,7 @@ public class SpotDTO {
             private Double longitude;
             private String city;
             private String country;
+            private Boolean isPlan;
         }
 
         @Builder

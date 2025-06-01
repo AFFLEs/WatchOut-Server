@@ -43,4 +43,7 @@ public class Spot extends BaseEntity {
 
     @Column(length = 100)
     private String country;
+
+    @Column(nullable = false)
+    private Boolean isPlan;
 }
