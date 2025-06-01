@@ -36,6 +36,12 @@ public class UserController {
         return ApiResponse.onSuccess(null);
     }
 
+    // accessToken 재발급
+    @PostMapping("/refresh")
+    public ApiResponse<LoginResponse> refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        return ApiResponse.onSuccess(userService.refreshAccessToken(request, response));
+    }
+
     @GetMapping("/info")
     public ApiResponse<UserProfileResponse> getUserProfile(HttpServletRequest httpRequest) {
         return ApiResponse.onSuccess(userService.getUserProfile(httpRequest));

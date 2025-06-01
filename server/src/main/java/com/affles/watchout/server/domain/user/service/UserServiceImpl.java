@@ -73,15 +73,19 @@ public class UserServiceImpl implements UserService {
         String accessToken = jwtUtil.generateToken(user.getUserId(), user.getEmail());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserId(), user.getEmail());
 
-        // 응답 헤더에 토큰 추가
+        // 응답 헤더에 accessToken 추가
         response.setHeader("Authorization", "Bearer " + accessToken);
 
-        // Redis에 refreshToken 저장
-        redisUtil.saveRefreshToken(user.getUserId().toString(), refreshToken, 60 * 60 * 24 * 14); // 2주
+        // refreshToken → Redis 저장
+        redisUtil.saveRefreshToken(user.getUserId().toString(), refreshToken, 60 * 60 * 24 * 14); // 2주로 설정
+
+        // refreshToken → HttpOnly 쿠키로 전송
+        jwtUtil.setCookie(response, "refreshToken", refreshToken, 60 * 60 * 24 * 14);
 
         return LoginResponse.builder()
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .name(user.getName())
+                .email(user.getEmail())
                 .build();
     }
 
@@ -111,6 +115,41 @@ public class UserServiceImpl implements UserService {
                 .guardianPhone(user.getGuardianPhone())
                 .vibrationAlert(user.getVibrationAlert())
                 .enableWatchEmergencySignal(user.getEnableWatchEmergencySignal())
+                .build();
+    }
+
+    @Override
+    public LoginResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
+        // 쿠키에서 refreshToken 추출
+        String refreshToken = jwtUtil.resolveToken(request);
+        if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
+            throw new UserException(ErrorStatus.TOKEN_NOT_FOUND);
+        }
+
+        // userId, email 추출
+        Long userId = jwtUtil.getUserId(refreshToken);
+        String email = jwtUtil.getEmail(refreshToken);
+
+        // Redis에서 토큰 일치 확인
+        String savedToken = redisUtil.getRefreshToken(userId.toString());
+        if (!refreshToken.equals(savedToken)) {
+            throw new UserException(ErrorStatus.REFRESH_TOKEN_INVALID);
+        }
+
+        // 새 accessToken 생성
+        String newAccessToken = jwtUtil.generateToken(userId, email);
+
+        // Authorization 헤더에 포함
+        response.setHeader("Authorization", "Bearer " + newAccessToken);
+
+        // 유저 정보 조회 (name 반환을 위해)
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
+
+        return LoginResponse.builder()
+                .accessToken(newAccessToken)
+                .name(user.getName())
+                .email(user.getEmail())
                 .build();
     }
 

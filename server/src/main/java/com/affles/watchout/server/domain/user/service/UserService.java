@@ -13,6 +13,8 @@ public interface UserService {
 
     void logout(HttpServletRequest request);
 
+    LoginResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response);
+
     UserProfileResponse getUserProfile(HttpServletRequest requestHeader);
 
     // 유저 동의 설정 관련

@@ -104,7 +104,8 @@ public class UserDTO {
         @AllArgsConstructor
         public static class LoginResponse {
             private String accessToken;
-            private String refreshToken;
+            private String name;
+            private String email;
         }
 
         @Builder
