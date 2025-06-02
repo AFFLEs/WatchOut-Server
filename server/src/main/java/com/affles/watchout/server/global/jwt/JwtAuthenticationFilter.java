@@ -30,6 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
+        // 회원가입, 로그인, refresh는 바로 패스하도록 수정
+        String uri = request.getRequestURI();
+        if (uri.startsWith("/api/users/login") ||
+                uri.startsWith("/api/users/signup") ||
+                uri.startsWith("/api/users/refresh")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String token = jwtUtil.resolveToken(request);
 
         if (StringUtils.hasText(token)) {
@@ -52,9 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (ExpiredJwtException e) {
-                setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND); // or TOKEN_EXPIRED
+                setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND);
             } catch (JwtException | IllegalArgumentException e) {
-                setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND); // or TOKEN_INVALID
+                setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND);
             }
         }
 
