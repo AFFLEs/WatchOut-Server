@@ -51,7 +51,11 @@ public enum ErrorStatus implements BaseErrorCode {
     // 자연재해 관련 에러
     DISASTER_PARAM_INVALID(HttpStatus.BAD_REQUEST, "잘못된 위도/경도 입니다."),
     DISASTER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위치에 재난 이벤트가 존재하지 않습니다."),
-    DISASTER_EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "외부 재난 정보 조회에 실패했습니다.");
+    DISASTER_EXTERNAL_API_ERROR(HttpStatus.BAD_GATEWAY, "외부 재난 정보 조회에 실패했습니다."),
+
+    // 응급 상황 관련
+    EMERGENCY_SEND_SMS_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "응급 문자 전송에 실패했습니다."),
+    EMERGENCY_NOT_ALLOWED(HttpStatus.FORBIDDEN, "응급 기능 사용 권한이 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -33,3 +33,9 @@ ambee:
     base-url: https://api.ambeedata.com
   api:
     key: ${AMBEE_API_KEY}
+
+solapi:
+  base-url: https://api.solapi.com
+  apiKey: ${SOL_API_KEY}
+  apiSecret: ${SOL_API_SECRET}
+  from: ${PHONE_NUMBER}
