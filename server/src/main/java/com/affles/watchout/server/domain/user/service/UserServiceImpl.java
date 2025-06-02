@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void logout(HttpServletRequest request) {
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
         String token = jwtUtil.resolveToken(request);
 
         if (token == null || !jwtUtil.validateToken(token)) {
@@ -102,6 +102,8 @@ public class UserServiceImpl implements UserService {
 
         Long expiration = jwtUtil.getExpiration(token);
         redisUtil.addTokenToBlacklist(token, expiration);
+
+        jwtUtil.setCookie(response, "refreshToken", "", 0);
     }
 
     @Override

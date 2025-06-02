@@ -11,7 +11,7 @@ public interface UserService {
     SignUpResponse signUp(SignUpRequest request);
     LoginResponse login(LoginRequest request, HttpServletResponse response);
 
-    void logout(HttpServletRequest request);
+    void logout(HttpServletRequest request, HttpServletResponse response);
 
     LoginResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response);
 

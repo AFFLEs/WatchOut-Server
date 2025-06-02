@@ -31,8 +31,8 @@ public class UserController {
 
     // 로그아웃
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(HttpServletRequest request) {
-        userService.logout(request);
+    public ApiResponse<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        userService.logout(request, response);
         return ApiResponse.onSuccess(null);
     }
 
