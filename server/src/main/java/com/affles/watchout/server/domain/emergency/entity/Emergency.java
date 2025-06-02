@@ -25,5 +25,7 @@ public class Emergency extends BaseEntity {
 
     private LocalDateTime occurDate;
 
-    // 발생 장소 저장하는 건 추후 추가해야 함
+    private String reason;
+    private Double latitude;
+    private Double longitude;
 }

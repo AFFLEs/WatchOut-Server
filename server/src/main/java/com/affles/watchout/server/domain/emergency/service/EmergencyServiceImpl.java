@@ -12,6 +12,7 @@ import com.affles.watchout.server.domain.user.entity.User;
 import com.affles.watchout.server.domain.user.repository.UserRepository;
 import com.affles.watchout.server.global.exception.TravelException;
 import com.affles.watchout.server.global.exception.UserException;
+import com.affles.watchout.server.global.exception.EmergencyException;
 import com.affles.watchout.server.global.jwt.JwtUtil;
 import com.affles.watchout.server.global.status.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +46,9 @@ public class EmergencyServiceImpl implements EmergencyService {
         emergencyRepository.save(Emergency.builder()
                 .user(user)
                 .occurDate(LocalDateTime.now())
+                .reason(request.getReason())
+                .latitude(request.getLatitude())
+                .longitude(request.getLongitude())
                 .build());
 
         // Travel → Spot 조회 - 응급 상황 발생일 기준
@@ -61,22 +65,29 @@ public class EmergencyServiceImpl implements EmergencyService {
 
         // 보호자 메시지 전송
         String message = String.format("""
-                        [WatchOut 안내]
-                        %s님 보호자 연락처로 등록되어 있어 연락드립니다.
-                        현재, %s님 응급 상황 발생으로 판단됩니다.
-                        원인: %s
-                        위치: 위도 %.6f, 경도 %.6f
-                        최근 경로:
-                        %s
-                        연락을 취해 확인해보세요.
-                        """,
+                [WatchOut 응급 상황 발생 안내]
+                %s님 보호자 연락처로 등록되어 있어 연락드립니다.
+        
+                현재, %s님 응급 상황 발생으로 판단됩니다.
+        
+                원인: %s
+                위치: 위도 %.6f, 경도 %.6f
+                최근 경로:
+                %s
+        
+                연락을 취해 확인해보세요.
+                """,
                 user.getName(), user.getName(),
                 request.getReason(),
                 request.getLatitude(), request.getLongitude(),
                 String.join("\n", spotList)
         );
 
-        smsService.send(user.getGuardianPhone(), message);
+        try {
+            smsService.send(user.getGuardianPhone(), message);
+        } catch (Exception e) {
+            throw new EmergencyException(ErrorStatus.EMERGENCY_SEND_SMS_FAILED);
+        }
 
         return EmergencyResponse.builder()
                 .userName(user.getName())
