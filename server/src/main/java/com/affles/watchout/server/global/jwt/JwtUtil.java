@@ -66,8 +66,15 @@ public class JwtUtil {
         return getClaims(token).get("email", String.class);
     }
 
-    // refreshToken을 body로 받지 않고 cookie에서 꺼냄
-    public String resolveToken(HttpServletRequest request) {
+    public String resolveAccessToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7); // Bearer 제거
+        }
+        return null;
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
         if (request.getCookies() == null) return null;
 
         for (var cookie : request.getCookies()) {
