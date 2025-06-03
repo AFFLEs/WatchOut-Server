@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        String token = jwtUtil.resolveToken(request);
+        String token = jwtUtil.resolveAccessToken(request);
 
         if (token == null || !jwtUtil.validateToken(token)) {
             throw new UserException(ErrorStatus.TOKEN_NOT_FOUND);
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponse refreshAccessToken(HttpServletRequest request, HttpServletResponse response) {
         // 쿠키에서 refreshToken 추출
-        String refreshToken = jwtUtil.resolveToken(request);
+        String refreshToken = jwtUtil.resolveRefreshToken(request);
         if (refreshToken == null || !jwtUtil.validateToken(refreshToken)) {
             throw new UserException(ErrorStatus.TOKEN_NOT_FOUND);
         }
@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
 
     // 유저 동의 설정 관련
     private User getUser(HttpServletRequest request) {
-        Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(request));
+        Long userId = jwtUtil.getUserId(jwtUtil.resolveAccessToken(request));
         return userRepository.findById(userId).orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
     }
 

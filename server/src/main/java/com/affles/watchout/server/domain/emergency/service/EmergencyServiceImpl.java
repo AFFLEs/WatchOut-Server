@@ -38,7 +38,7 @@ public class EmergencyServiceImpl implements EmergencyService {
 
     @Override
     public EmergencyResponse handleEmergency(EmergencyRequest request, HttpServletRequest httpRequest) {
-        Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(httpRequest));
+        Long userId = jwtUtil.getUserId(jwtUtil.resolveAccessToken(httpRequest));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
 

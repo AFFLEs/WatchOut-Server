@@ -4,12 +4,15 @@ import com.affles.watchout.server.global.common.ApiResponse;
 import com.affles.watchout.server.global.status.ErrorStatus;
 import com.affles.watchout.server.global.redis.RedisUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -30,8 +34,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 회원가입, 로그인, refresh는 바로 패스하도록 수정
         String uri = request.getRequestURI();
+        log.info("🛡️ [JWT 필터] 요청 URI: {}", uri);
+
+        // 인증 제외 URI
         if (uri.startsWith("/api/users/login") ||
                 uri.startsWith("/api/users/signup") ||
                 uri.startsWith("/api/users/refresh")) {
@@ -39,20 +45,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = jwtUtil.resolveToken(request);
+        String authorizationHeader = request.getHeader("Authorization");
+        log.info("🔍 [Authorization 헤더] {}", authorizationHeader);
+
+        String token = jwtUtil.resolveAccessToken(request);
+        log.info("🔍 [AccessToken 파싱] {}", token);
 
         if (StringUtils.hasText(token)) {
             try {
-                // 블랙리스트 확인
                 if (redisUtil.isTokenBlacklisted(token)) {
-                    setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND); // or TOKEN_BLACKLISTED
+                    log.warn("⛔ 블랙리스트 토큰으로 요청됨");
+                    setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND);
                     return;
                 }
 
-                // Claims 파싱 → 예외 발생 가능
                 Claims claims = jwtUtil.getClaims(token);
-
-                // 유저 정보 꺼내기
                 Long userId = Long.parseLong(claims.getSubject());
 
                 UsernamePasswordAuthenticationToken authentication =
@@ -60,9 +67,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                log.info("✅ [JWT 인증 성공] userId: {}", userId);
+
             } catch (ExpiredJwtException e) {
+                log.warn("⚠️ [JWT 만료] {}", e.getMessage());
                 setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND);
             } catch (JwtException | IllegalArgumentException e) {
+                log.warn("⚠️ [JWT 파싱 실패] {}", e.getMessage());
                 setErrorResponse(response, ErrorStatus.TOKEN_NOT_FOUND);
             }
         }

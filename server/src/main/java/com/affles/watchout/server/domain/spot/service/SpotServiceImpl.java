@@ -78,7 +78,7 @@ public class SpotServiceImpl implements SpotService {
 
     @Override
     public DeletedSpotInfo deleteSpot(Long spotId, HttpServletRequest requestHeader) {
-        Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(requestHeader));
+        Long userId = jwtUtil.getUserId(jwtUtil.resolveAccessToken(requestHeader));
         Spot spot = spotRepository.findById(spotId)
                 .orElseThrow(() -> new SpotException(ErrorStatus.SPOT_NOT_FOUND));
 
@@ -95,7 +95,7 @@ public class SpotServiceImpl implements SpotService {
     }
 
     private Travel getTravelFromRequest(HttpServletRequest request) {
-        Long userId = jwtUtil.getUserId(jwtUtil.resolveToken(request));
+        Long userId = jwtUtil.getUserId(jwtUtil.resolveAccessToken(request));
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException(ErrorStatus.USER_NOT_FOUND));
         return travelRepository.findFirstByUser(user)
